@@ -1,24 +1,28 @@
 version: "3.9"
+
 services: 
+
     db: 
-     image: 'mysql8.0'
-     ports: 
-      - '3305:3305'
-     environment: 
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: user 
-      MYSQL_DATABASE: database
-      MYSQL_PASSWORD: password
-     container_name: docker_sql_db
+        image: mysql8.0
+        ports: 
+            - "${LOCAL_DB_PORT}:3306"
+        environment: 
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: user 
+            MYSQL_DATABASE: database
+            MYSQL_PASSWORD: password
+        restart: on-failure:5
+        container_name: mysql_container
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         
     phpmyadmin: 
-     image: phpmyadmin/phpmyadmin
-     ports: 
-      - '3000:80'
-     environment: 
-      - PMA_PASSWORD=password
-      - PMA_ARBITRARY=1
-      - PMA_HOST=db
-      - PMA_USER=user
-     links: 
-      - db
+        image: phpmyadmin/phpmyadmin
+        ports: 
+            - "8082:80"
+        environment: 
+            - PMA_PASSWORD=password
+            - PMA_ARBITRARY=1
+            - PMA_HOST=db
+            - PMA_USER=user
+        links: 
+            - db
